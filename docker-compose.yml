@@ -1,0 +1,7 @@
+services:
+  builder:
+    build: 
+      context: .
+      dockerfile: Dockerfile.ptau-gen
+    volumes:
+      - ./build:/app/build
