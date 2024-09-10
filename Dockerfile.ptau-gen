@@ -7,13 +7,14 @@ RUN cargo install --path circom
 FROM node:latest
 COPY --from=builder /usr/local/cargo/bin/circom /usr/local/bin/circom
 WORKDIR /app
-RUN npm init
-RUN npm install circomlib
-RUN npm install -g snarkjs
 
-COPY ./contracts/poseidon_hasher.circom /app/poseidon_hasher.circom
+COPY ./contracts /app
 COPY ./generate_ptau.sh /app/generate_ptau.sh
+COPY ./package.json /app/package.json
+COPY ./package-lock.json /app/package-lock.json
+
+RUN npm install
 
 
-CMD ["./generate_ptau.sh"]
+CMD ["./generate_ptau.sh", "doctor_validation.circom"]
 # CMD ["/bin/bash"]
