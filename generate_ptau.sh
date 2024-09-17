@@ -26,11 +26,11 @@ npx snarkjs powersoftau verify build/pot14_final.ptau
 # Phase 2
 npx snarkjs groth16 setup build/${base_name}.r1cs build/pot14_final.ptau circuit_0000.zkey
 npx snarkjs r1cs export json build/${base_name}.r1cs build/${base_name}.r1cs.json
-cat <<EOT > input.json
-{"in": 2}
-EOT
-node build/${base_name}_js/generate_witness.js build/${base_name}_js/${base_name}.wasm input.json build/witness.wtns
-npx snarkjs wtns check build/${base_name}.r1cs build/witness.wtns
+# cat <<EOT > input.json
+# {"in": 2}
+# EOT
+# node build/${base_name}_js/generate_witness.js build/${base_name}_js/${base_name}.wasm input.json build/witness.wtns
+# npx snarkjs wtns check build/${base_name}.r1cs build/witness.wtns
 npx snarkjs groth16 setup build/${base_name}.r1cs build/pot14_final.ptau build/circuit_0000.zkey
 npx snarkjs zkey contribute build/circuit_0000.zkey build/circuit_0001.zkey --name="1st Contributor Name" -v -e="more randomnesssss123"
 npx snarkjs zkey beacon build/circuit_0001.zkey build/circuit_final.zkey d28352218a6bee71fe66f1cb22dc51759db5bf7c53b23723ede9a4fbb88f063d 10 -n="Fina
@@ -39,8 +39,8 @@ npx snarkjs zkey verify build/${base_name}.r1cs build/pot14_final.ptau build/cir
 
 # Exporting
 npx snarkjs zkey export verificationkey build/circuit_final.zkey build/verification_key.json
-npx snarkjs groth16 prove build/circuit_final.zkey build/witness.wtns build/proof.json build/public.json
-npx snarkjs groth16 verify build/verification_key.json build/public.json build/proof.json
+# npx snarkjs groth16 prove build/circuit_final.zkey build/witness.wtns build/proof.json build/public.json
+# npx snarkjs groth16 verify build/verification_key.json build/public.json build/proof.json
 npx snarkjs zkey export solidityverifier build/circuit_final.zkey build/verifier.sol
 
-npx snarkjs zkey export soliditycalldata build/public.json build/proof.json
+# npx snarkjs zkey export soliditycalldata build/public.json build/proof.json

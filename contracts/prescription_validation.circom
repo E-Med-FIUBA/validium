@@ -1,0 +1,36 @@
+pragma circom 2.0.0;
+
+
+include "./node_modules/circomlib/circuits/smt/smtprocessor.circom";
+
+
+
+template PrescriptionVerifier(nLevels) {
+    signal input oldRoot;
+    signal input newRoot;
+    signal input siblings[nLevels];
+    signal input oldKey;
+    signal input oldValue;
+    signal input isOld0;
+    signal input newKey;
+    signal input newValue;
+    signal input fnc[2];
+
+    signal output valid;
+
+    component processor = SMTProcessor(nLevels);
+
+    processor.oldRoot <== oldRoot;
+    processor.siblings <== siblings;
+    processor.oldKey <== oldKey;
+    processor.oldValue <== oldValue;
+    processor.isOld0 <== isOld0;
+    processor.newKey <== newKey;
+    processor.newValue <== newValue;
+    processor.fnc <== fnc;
+
+    output <== processor.newRoot === newRoot;
+}
+
+
+component main = PrescriptionVerifier(4);

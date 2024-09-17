@@ -16,5 +16,5 @@ COPY ./package-lock.json /app/package-lock.json
 RUN npm install
 
 
-CMD ["./generate_ptau.sh", "doctor_validation.circom"]
+CMD ["./generate_ptau.sh", "prescription_validation.circom"]
 # CMD ["/bin/bash"]

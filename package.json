@@ -10,11 +10,17 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/circomlibjs": "^0.1.6",
+    "@types/node": "^22.5.4",
     "@types/snarkjs": "^0.7.8",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "ethers": "^6.13.2",
+    "ffjavascript": "^0.3.0",
+    "merkletreejs": "^0.4.0",
     "snarkjs": "^0.7.4"
   }
 }
