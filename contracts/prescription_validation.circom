@@ -9,9 +9,9 @@ template PrescriptionVerifier(nLevels) {
     signal input oldRoot;
     signal input newRoot;
     signal input siblings[nLevels];
-    signal input oldKey;
     signal input oldValue;
     signal input isOld0;
+    signal input oldKey;
     signal input newKey;
     signal input newValue;
     signal input fnc[2];
@@ -29,7 +29,7 @@ template PrescriptionVerifier(nLevels) {
     processor.newValue <== newValue;
     processor.fnc <== fnc;
 
-    output <== processor.newRoot === newRoot;
+    processor.newRoot === newRoot;
 }
 
 

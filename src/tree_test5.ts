@@ -18,21 +18,15 @@ async function main() {
   const poseidon = await buildPoseidon();
   const leafs = [1, 2, 3, 4].map((x) => poseidon([x]));
 
+
   // Insert the first two leaves
   await trie.insert(0, leafs[0]);
-  await trie.insert(1, leafs[1]);
+  // await trie.insert(1, leafs[1]);
   // await trie.insert(2, leafs[2]);
   
   // Display the whole trie
-  const root = await trie.root;
+  const root = trie.root;
   console.log("Root: ", trie.F.toObject(root));
-
-  // Display all the nodes
-  // const nodes = await trie.db.nodes;
-  // console.log("Nodes: ", nodes);
-  // for (const node of nodes) {
-  //   console.log("Node: ", node.toString());
-  // }
 
   const leaf0 = await trie.find(0);
   console.log("Leaf 0: ", trie.F.toObject(leaf0.foundValue), convertSiblings(trie, leaf0.siblings));
@@ -45,6 +39,12 @@ async function main() {
     const values = nodes[key].map((node: any) => trie.F.toObject(node));
     console.log(key, values);
   });
+
+  const expectedRoot = poseidon([trie.F.toObject(leaf1.foundValue), ...convertSiblings(trie, leaf1.siblings)])
+  console.log(trie.F.toObject(expectedRoot));
+
+  console.log(await trie.find(2));
+
 }
 
 main();
