@@ -13,15 +13,19 @@
     "@types/circomlibjs": "^0.1.6",
     "@types/node": "^22.5.4",
     "@types/snarkjs": "^0.7.8",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "@ethereumjs/trie": "^6.2.1",
     "@ethereumjs/util": "^9.1.0",
+    "@matterlabs/hardhat-zksync": "^1.1.0",
     "circomlib": "^2.0.5",
     "circomlibjs": "^0.1.7",
+    "dotenv": "^16.4.5",
     "ethers": "^6.13.2",
     "ffjavascript": "^0.3.0",
+    "hardhat": "^2.22.11",
     "merkletreejs": "^0.4.0",
     "snarkjs": "^0.7.4"
   }

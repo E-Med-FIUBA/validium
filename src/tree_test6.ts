@@ -34,6 +34,7 @@ async function main() {
     "build/prescription_validation_js/prescription_validation.wasm",
     "build/circuit_final.zkey"
   );
+  console.log(proof, publicSignals);
 }
 
 main();

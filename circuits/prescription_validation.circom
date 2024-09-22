@@ -16,8 +16,6 @@ template PrescriptionVerifier(nLevels) {
     signal input newValue;
     signal input fnc[2];
 
-    signal output valid;
-
     component processor = SMTProcessor(nLevels);
 
     processor.oldRoot <== oldRoot;
