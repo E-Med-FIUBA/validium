@@ -15,7 +15,7 @@ if (!PRIVATE_KEY)
   throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // Address of the contract on ZKsync testnet
-const CONTRACT_ADDRESS = "0xD1E8010CA82D1383074c82a6F04C99a5ceAAe16F";
+const CONTRACT_ADDRESS = "0xd20b5F4C5D76e701CA4F044Ce56083BC7C0F801B";
 
 if (!CONTRACT_ADDRESS) throw "⛔️ Contract address not provided";
 
@@ -55,7 +55,6 @@ export default async function (hre: HardhatRuntimeEnvironment) {
       "0x1a016446debe317d201e91c37d3b84030164a7799b906d041e5005f8dd08dfd1",
       "0x1a434f2aad81f99d127e5832d9147454cab6d4ab85ffec75e0cb4ace527ae882"
     ],
-    ["0x0"]
   );
   console.log(`Transaction to send message is ${txSend.hash}`);
   await txSend.wait();

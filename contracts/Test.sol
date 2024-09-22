@@ -25,16 +25,12 @@ contract Test {
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
-        uint256[2] calldata c,
-        uint256[1] calldata input
+        uint256[2] calldata c
     ) external {
+        uint256[1] memory inputs = [uint256(balancesMerkleRoot)];
         require(
-            verifier.verifyProof(a, b, c, input),
+            verifier.verifyProof(a, b, c, inputs),
             "Invalid proof for balances"
-        );
-        require(
-            bytes32(input[0]) == balancesMerkleRoot,
-            "Invalid balances root transition"
         );
         balancesMerkleRoot = newRoot;
         emit BalancesMerkleRootUpdated(newRoot);
@@ -45,16 +41,12 @@ contract Test {
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
-        uint256[2] calldata c,
-        uint256[1] calldata input
+        uint256[2] calldata c
     ) external {
+        uint256[1] memory inputs = [uint256(transactionsMerkleRoot)];
         require(
-            verifier.verifyProof(a, b, c, input),
+            verifier.verifyProof(a, b, c, inputs),
             "Invalid proof for transactions"
-        );
-        require(
-            bytes32(input[0]) == transactionsMerkleRoot,
-            "Invalid transactions root transition"
         );
         transactionsMerkleRoot = newRoot;
         emit TransactionsMerkleRootUpdated(newRoot);
