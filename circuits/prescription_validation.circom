@@ -28,6 +28,8 @@ template PrescriptionVerifier(nLevels) {
     processor.fnc <== fnc;
 
     processor.newRoot === newRoot;
+
+    signal output pubOldRoot <== oldRoot;
 }
 
 

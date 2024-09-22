@@ -16,6 +16,8 @@ contract Test {
 
     constructor() {
         verifier = new Groth16Verifier();
+        balancesMerkleRoot = bytes32(0);
+        transactionsMerkleRoot = bytes32(0);
     }
 
     // Update the balances Merkle tree with a zk-SNARK proof
@@ -23,9 +25,17 @@ contract Test {
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
-        uint256[2] calldata c
+        uint256[2] calldata c,
+        uint256[1] calldata input
     ) external {
-        require(verifier.verifyProof(a, b, c), "Invalid proof for balances");
+        require(
+            verifier.verifyProof(a, b, c, input),
+            "Invalid proof for balances"
+        );
+        require(
+            bytes32(input[0]) == balancesMerkleRoot,
+            "Invalid balances root transition"
+        );
         balancesMerkleRoot = newRoot;
         emit BalancesMerkleRootUpdated(newRoot);
     }
@@ -35,11 +45,16 @@ contract Test {
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
-        uint256[2] calldata c
+        uint256[2] calldata c,
+        uint256[1] calldata input
     ) external {
         require(
-            verifier.verifyProof(a, b, c),
+            verifier.verifyProof(a, b, c, input),
             "Invalid proof for transactions"
+        );
+        require(
+            bytes32(input[0]) == transactionsMerkleRoot,
+            "Invalid transactions root transition"
         );
         transactionsMerkleRoot = newRoot;
         emit TransactionsMerkleRootUpdated(newRoot);

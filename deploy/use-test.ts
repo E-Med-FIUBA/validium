@@ -15,7 +15,7 @@ if (!PRIVATE_KEY)
   throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // Address of the contract on ZKsync testnet
-const CONTRACT_ADDRESS = "0x1E203c6dB4674906d4B4a47B3ef41576a0E71283";
+const CONTRACT_ADDRESS = "0xD1E8010CA82D1383074c82a6F04C99a5ceAAe16F";
 
 if (!CONTRACT_ADDRESS) throw "⛔️ Contract address not provided";
 
@@ -36,29 +36,30 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
   // Send message to contract
   const txSend = await contract.updateBalancesMerkleRoot(
-    "0x2be3e5127929ebdae9318227d3d19feac6cef35813fc88a21812f5039389b48b",
+    "0x1494941975a4dd6ab1f73be17eece1ed4d29ccd7a1cfa815f7cf3ca5284da8ae",
     [
-      "0x29ed097ec927465efbe342553ef4a4c2529b62d660ffe3ae02ee48c99e24a3ef",
-      "0x266f9174d7f4611b8d1ceeec3cedc4bc47edf283a418fae2487890d8d32045ac"
+      "0xebbc3bb24017fb5c66b4e1da0cde522e5496acf3b94963cacbcd34bced4360c",
+      "0x2f5c2fcb9116f0fb58f900a25ee750257afcdcdac208a29971f33332a6c6bced"
     ],
     [
       [
-        "0x26449fb95cc6edaefaca8a8139b0875f0f2c1227e1df2f646d61afc60fe6e63c",
-        "0x2a0989f0d2051d8ef58bfab44961ea719f41ceb431ed67f6e6b13c00ddb52f7a"
+        "0x1b65becbc1acc2dfe310bab5dfc17e29ec48d49390572d72587545bea9cd0ab8",
+        "0x5344ead09364ab073d5a835b10ff80fdc01211d36bb80f0e2e9aeae75f0ab74"
       ],
       [
-        "0x2b029ca247391bb3c952438e0992ebd6a9dbd94fbc0ddf100fa90e1218b8b488",
-        "0x11c5619adf9804262d00a44f37d3451ed60519046076039721e7fb24410f3a8e"
+        "0x29b1fee309e99520255370155c8e61c242d83ff840968dcc4a8e7a374ceea612",
+        "0x29007672403eee618948a8d83be6ca13c1f6043b07ad67d564c0ee4aea5376c6"
       ]
     ],
     [
-      "0x2f65fc72c17840729c2e31e4bef04ed9c666ff83009debe4ebdd3ff2f1d931c9",
-      "0x193661f6224b59cdb70a14cc3e02f26257533e543523f74a9e9208aeb1721f4"
-    ]
+      "0x1a016446debe317d201e91c37d3b84030164a7799b906d041e5005f8dd08dfd1",
+      "0x1a434f2aad81f99d127e5832d9147454cab6d4ab85ffec75e0cb4ace527ae882"
+    ],
+    ["0x0"]
   );
   console.log(`Transaction to send message is ${txSend.hash}`);
   await txSend.wait();
-  
+
   // Call the contract
   const root = await contract.balancesMerkleRoot();
   console.log(`The balances merkle root is ${root}`);
