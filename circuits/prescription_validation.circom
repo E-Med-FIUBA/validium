@@ -2,10 +2,11 @@ pragma circom 2.0.0;
 
 
 include "./node_modules/circomlib/circuits/smt/smtprocessor.circom";
+include "./node_modules/circomlib/circuits/smt/smtverifier.circom";
 
 
 
-template PrescriptionVerifier(nLevels) {
+template PrescriptionVerifier(nLevels, doctorLevels) {
     signal input oldRoot;
     signal input newRoot;
     signal input siblings[nLevels];
@@ -30,7 +31,28 @@ template PrescriptionVerifier(nLevels) {
     processor.newRoot === newRoot;
 
     signal output pubOldRoot <== oldRoot;
+
+    // -------------------------------------
+
+    signal input doctorRoot;
+    signal input doctorSiblings[doctorLevels];
+    signal input doctorKey;
+    signal input doctorValue;
+
+    component doctorVerifier = SMTVerifier(doctorLevels);
+
+    doctorVerifier.enabled <== 1; // Always enabled
+    doctorVerifier.root <== doctorRoot;
+    doctorVerifier.siblings <== doctorSiblings;
+    doctorVerifier.isOld0 <== 0;
+    doctorVerifier.oldKey <== doctorKey;
+    doctorVerifier.key <== doctorKey;
+    doctorVerifier.value <== doctorValue;
+    doctorVerifier.oldValue <== doctorValue;
+    doctorVerifier.fnc <== 0; // Always check for inclusion
+
+    signal output oldDoctorRoot <== doctorVerifier.root;
 }
 
 
-component main = PrescriptionVerifier(4);
+component main = PrescriptionVerifier(4, 4);
