@@ -8,12 +8,12 @@ FROM node:latest
 COPY --from=builder /usr/local/cargo/bin/circom /usr/local/bin/circom
 WORKDIR /app
 
-COPY ./circuits /app
-COPY ./generate_ptau.sh /app/generate_ptau.sh
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
-
 RUN npm install
+
+COPY ./generate_ptau.sh /app/generate_ptau.sh
+COPY ./circuits /app
 
 
 CMD ["./generate_ptau.sh", "prescription_validation.circom"]
