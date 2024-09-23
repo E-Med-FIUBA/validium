@@ -1,54 +1,61 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./verifier.sol";
+import "./PrescriptionVerifier.sol";
+import "./DoctorVerifier.sol";
 
 contract Test {
     // Roots for different Merkle trees
-    bytes32 public balancesMerkleRoot;
-    bytes32 public transactionsMerkleRoot;
+    bytes32 public doctorsMerkleRoot;
+    bytes32 public prescriptionsMerkleRoot;
 
-    Groth16Verifier verifier;
+    PrescriptionVerifier prescriptionVerifier;
+    DoctorVerifier doctorsVerifier;
 
     // Event emitted when any Merkle root is updated
-    event BalancesMerkleRootUpdated(bytes32 newRoot);
-    event TransactionsMerkleRootUpdated(bytes32 newRoot);
+    event DoctorsMerkleRootUpdated(bytes32 newRoot);
+    event PrescriptionsMerkleRootUpdated(bytes32 newRoot);
 
     constructor() {
-        verifier = new Groth16Verifier();
-        balancesMerkleRoot = bytes32(0);
-        transactionsMerkleRoot = bytes32(0);
+        prescriptionVerifier = new PrescriptionVerifier();
+        doctorsVerifier = new DoctorVerifier();
+        doctorsMerkleRoot = bytes32(0);
+        prescriptionsMerkleRoot = bytes32(0);
     }
 
-    // Update the balances Merkle tree with a zk-SNARK proof
-    function updateBalancesMerkleRoot(
+    // Update the doctors Merkle tree with a zk-SNARK proof
+    function updateDoctorsMerkleRoot(
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
         uint256[2] calldata c
     ) external {
-        uint256[1] memory inputs = [uint256(balancesMerkleRoot)];
+        uint256[2] memory inputs = [uint256(doctorsMerkleRoot), uint256(newRoot)];
         require(
-            verifier.verifyProof(a, b, c, inputs),
-            "Invalid proof for balances"
+            doctorsVerifier.verifyProof(a, b, c, inputs),
+            "Invalid proof for doctors"
         );
-        balancesMerkleRoot = newRoot;
-        emit BalancesMerkleRootUpdated(newRoot);
+        doctorsMerkleRoot = newRoot;
+        emit DoctorsMerkleRootUpdated(newRoot);
     }
 
-    // Update the transactions Merkle tree with a zk-SNARK proof
-    function updateTransactionsMerkleRoot(
+    // Update the prescriptions Merkle tree with a zk-SNARK proof
+    function updatePrescriptionsMerkleRoot(
         bytes32 newRoot,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
         uint256[2] calldata c
     ) external {
-        uint256[1] memory inputs = [uint256(transactionsMerkleRoot)];
+        uint256[3] memory inputs = [
+            uint256(prescriptionsMerkleRoot),
+            uint256(newRoot),
+            uint256(doctorsMerkleRoot)
+        ];
         require(
-            verifier.verifyProof(a, b, c, inputs),
-            "Invalid proof for transactions"
+            prescriptionVerifier.verifyProof(a, b, c, inputs),
+            "Invalid proof for prescriptions"
         );
-        transactionsMerkleRoot = newRoot;
-        emit TransactionsMerkleRootUpdated(newRoot);
+        prescriptionsMerkleRoot = newRoot;
+        emit PrescriptionsMerkleRootUpdated(newRoot);
     }
 }

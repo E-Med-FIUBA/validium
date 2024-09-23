@@ -30,8 +30,6 @@ template PrescriptionVerifier(nLevels, doctorLevels) {
 
     processor.newRoot === newRoot;
 
-    signal output pubOldRoot <== oldRoot;
-
     // -------------------------------------
 
     signal input doctorRoot;
@@ -50,9 +48,7 @@ template PrescriptionVerifier(nLevels, doctorLevels) {
     doctorVerifier.value <== doctorValue;
     doctorVerifier.oldValue <== doctorValue;
     doctorVerifier.fnc <== 0; // Always check for inclusion
-
-    signal output oldDoctorRoot <== doctorVerifier.root;
 }
 
 
-component main = PrescriptionVerifier(4, 4);
+component main {public [oldRoot, newRoot, doctorRoot]} = PrescriptionVerifier(4, 4);

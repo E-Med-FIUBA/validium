@@ -1,25 +1,30 @@
 pragma circom 2.0.0;
 
-include "./node_modules/circomlib/circuits/smt/smtverifier.circom";
-include "circomlib/merkle.circom";
+include "./node_modules/circomlib/circuits/smt/smtprocessor.circom";
 
 template DoctorValidation(nLevels) {
-    signal input root;
+    signal input oldRoot;
+    signal input newRoot;
     signal input siblings[nLevels];
-    signal input doctorId;
-    signal input doctorHash;
-    signal output isValid;
+    signal input oldValue;
+    signal input isOld0;
+    signal input oldKey;
+    signal input newKey;
+    signal input newValue;
+    signal input fnc[2];
 
-    component smt = SMTVerifier(nLevels);
-    smt.fnc <== 1; // VERIFY INCLUSION
-    smt.key <== doctorHash;
-    smt.value <== doctorId;
-    smt.root <== root;
-    smt.enabled <== 1;
-    smt.siblings <== siblings;
-    smt.oldKey <== 0;
-    smt.oldValue <== 0;
-    smt.isOld0 <== 0;
+    component processor = SMTProcessor(nLevels);
+
+    processor.oldRoot <== oldRoot;
+    processor.siblings <== siblings;
+    processor.oldKey <== oldKey;
+    processor.oldValue <== oldValue;
+    processor.isOld0 <== isOld0;
+    processor.newKey <== newKey;
+    processor.newValue <== newValue;
+    processor.fnc <== fnc;
+
+    processor.newRoot === newRoot;
 }
 
-component main = DoctorValidation(4);
+component main {public [oldRoot, newRoot]} = DoctorValidation(4);

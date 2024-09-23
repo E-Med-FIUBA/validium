@@ -15,7 +15,7 @@ if (!PRIVATE_KEY)
 
 // An example of a deploy script that will deploy and call a simple contract.
 export default async function (hre: HardhatRuntimeEnvironment) {
-  console.log(`Running deploy script for the Messages contract`);
+  console.log(`Running deploy script for the Test contract`);
 
   // Initialize the wallet.
   const wallet = new Wallet(PRIVATE_KEY);
