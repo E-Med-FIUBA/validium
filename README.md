@@ -74,3 +74,5 @@ Once you have the environment variables set, you can deploy the contract by runn
 ```bash
 ./deploy-contract.sh
 ```
+
+This will deploy the contract to the ZKSync network and output the contract address.
