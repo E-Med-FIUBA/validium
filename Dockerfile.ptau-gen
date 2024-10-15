@@ -13,8 +13,9 @@ COPY ./package-lock.json /app/package-lock.json
 RUN npm install
 
 COPY ./generate_ptau.sh /app/generate_ptau.sh
+COPY ./generate_all_ptau.sh /app/generate_all_ptau.sh
 COPY ./circuits /app
 
 
-CMD ["./generate_ptau.sh", "prescription_validation.circom"]
+CMD ["./generate_all_ptau.sh"]
 # CMD ["/bin/bash"]
