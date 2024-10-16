@@ -1,1 +1,1 @@
-npx hardhat deploy-zksync --script deploy-test.ts --network zkSyncTestnet
+npx hardhat deploy-zksync --script deploy-root-manager.ts --network zkSyncTestnet

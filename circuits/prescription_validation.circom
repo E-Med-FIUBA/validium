@@ -26,7 +26,7 @@ template PrescriptionVerifier(nLevels, doctorLevels) {
     processor.isOld0 <== isOld0;
     processor.newKey <== newKey;
     processor.newValue <== newValue;
-    processor.fnc <== fnc;
+    processor.fnc <== [1, 0]; // Always update
 
     processor.newRoot === newRoot;
 

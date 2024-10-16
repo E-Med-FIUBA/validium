@@ -5,7 +5,7 @@ import "./PrescriptionVerifier.sol";
 import "./DoctorVerifier.sol";
 import "./MerkleInclusionVerifier.sol";
 
-contract Test {
+contract RootManager {
   address public admin;
 
   // Roots for different Merkle trees

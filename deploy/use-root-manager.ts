@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // load contract artifact. Make sure to compile first! - Solidity Project
-import * as ContractArtifact from "../artifacts-zk/contracts/Test.sol/Test.json";
+import * as ContractArtifact from "../artifacts-zk/contracts/RootManager.sol/RootManager.json";
 
 const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY || "";
 
