@@ -15,7 +15,6 @@ template PrescriptionVerifier(nLevels, doctorLevels) {
     signal input oldKey;
     signal input newKey;
     signal input newValue;
-    signal input fnc[2];
 
     component processor = SMTProcessor(nLevels);
 
