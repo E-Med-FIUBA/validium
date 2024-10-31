@@ -15,7 +15,7 @@ if (!PRIVATE_KEY)
   throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // Address of the contract on ZKsync testnet
-const CONTRACT_ADDRESS = "0x6aAD2228CE3CB53E9aB16D9050a81a143332E5da";
+const CONTRACT_ADDRESS = "0x14283a87affD83EBa2B02856F7788fcbfE86395f";
 
 if (!CONTRACT_ADDRESS) throw "⛔️ Contract address not provided";
 
@@ -35,15 +35,8 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   );
 
   console.log("Doctor merkle root:", await contract.doctorsMerkleRoot());
-  console.log("Prescription merkle root:", await contract.prescriptionsMerkleRoot());
-
-  await contract.reset({
-    gasLimit: 1000000,
-  });
-
-  // Call the contract
-  const doctorsRoot = await contract.doctorsMerkleRoot();
-  const prescriptionsRoot = await contract.prescriptionsMerkleRoot();
-  console.log(`The prescriptions merkle root is ${prescriptionsRoot}`);
-  console.log(`The doctors merkle root is ${doctorsRoot}`);
+  console.log(
+    "Prescription merkle root:",
+    await contract.prescriptionsMerkleRoot()
+  );
 }
