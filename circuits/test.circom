@@ -58,12 +58,12 @@ template Test(nLevels) {
     processor.fnc <== [1 - fnc, fnc]; // [1, 0] => insert, [0, 1] => update
 
     processor.newRoot === newRoot;
-    (oldId - newId) * (1 - isOld0) === 0;
-    (oldDoctorId - newDoctorId) * (1 - isOld0) === 0;
-    (oldPatientId - newPatientId) * (1 - isOld0) === 0;
-    (oldPresentationId - newPresentationId) * (1 - isOld0) === 0;
-    (oldQuantity - newQuantity) * (1 - isOld0) === 0;
-    (oldEmitedAt - newEmitedAt) * (1 - isOld0) === 0;
+    (oldId - newId) * fnc === 0;
+    (oldDoctorId - newDoctorId) * fnc === 0;
+    (oldPatientId - newPatientId) * fnc === 0;
+    (oldPresentationId - newPresentationId) * fnc === 0;
+    (oldQuantity - newQuantity) * fnc === 0;
+    (oldEmitedAt - newEmitedAt) * fnc === 0;
 }
 
 component main {public [oldRoot, newRoot]} = Test(4);
