@@ -1,5 +1,5 @@
 import { newMemEmptyTrie } from "circomlibjs";
-import { poseidon6 } from "poseidon-lite";
+import { poseidon7 } from "poseidon-lite";
 import * as snarkjs from "snarkjs";
 
 interface Proof {
@@ -23,36 +23,50 @@ const hashPrescription = (prescription: {
   patientId: number;
   quantity: number;
   emitedAt: number;
+  isUsed: number;
 }) => {
-  return poseidon6([
+  return poseidon7([
     prescription.id,
     prescription.doctorId,
     prescription.presentationId,
     prescription.patientId,
     prescription.quantity,
-    prescription.emitedAt
+    prescription.emitedAt,
+    prescription.isUsed
   ]);
 };
 
 async function main() {
   const tree = await newMemEmptyTrie();
-  const _key = tree.F.e(111);
   const _value = {
     id: 1,
     doctorId: 1,
     presentationId: 1,
     patientId: 1,
     quantity: 1,
-    emitedAt: 1
+    emitedAt: 1,
+    isUsed: 0
   };
 
-  const key = tree.F.e(_key);
+  const key = 1;
   const value = hashPrescription(_value);
+  await tree.insert(key, value);
 
-  console.log(key, value);
+  // --------------------------------
 
-  const res = await tree.insert(key, value);
+  const _updatedValue = {
+    id: 1,
+    doctorId: 1,
+    presentationId: 1,
+    patientId: 1,
+    quantity: 1,
+    emitedAt: 1,
+    isUsed: 1
+  };
 
+  const updatedValue = hashPrescription(_updatedValue);
+
+  const res = await tree.update(key, updatedValue);
   let siblings = res.siblings;
   for (let i = 0; i < siblings.length; i++)
     siblings[i] = tree.F.toObject(siblings[i]);
@@ -60,41 +74,35 @@ async function main() {
 
   const { proof, publicSignals } = await snarkjs.groth16.fullProve(
     {
-      fnc: 0,
       oldRoot: tree.F.toObject(res.oldRoot),
       newRoot: tree.F.toObject(res.newRoot),
       siblings: siblings,
-      oldKey: 0,
-      oldId: 0,
-      oldDoctorId: 0,
-      oldPresentationId: 0,
-      oldPatientId: 0,
-      oldQuantity: 0,
-      oldEmitedAt: 0,
-      newId: _value.id,
-      newDoctorId: _value.doctorId,
-      newPresentationId: _value.presentationId,
-      newPatientId: _value.patientId,
-      newQuantity: _value.quantity,
-      newEmitedAt: _value.emitedAt,
-      isOld0: 1,
-      newKey: tree.F.toObject(key)
+      isOld0: res.isOld0 ? 1 : 0,
+      oldKey: tree.F.toObject(res.oldKey),
+      oldValue: tree.F.toObject(res.oldValue),
+      key: key,
+      id: _updatedValue.id,
+      doctorId: _updatedValue.doctorId,
+      presentationId: _updatedValue.presentationId,
+      patientId: _updatedValue.patientId,
+      quantity: _updatedValue.quantity,
+      emitedAt: _updatedValue.emitedAt
     },
     "build/test/test_js/test.wasm",
     "build/test/circuit_final.zkey"
   );
 
-//   console.log("Proof: ", proof);
-//   console.log("Proof: ", parseProof(proof));
-//   console.log(
-//     "Public signals: ",
-//     publicSignals.map((x) => BigInt(x).toString(16))
-//   );
-//   console.log("Root hex: ", BigInt(tree.F.toString(res.newRoot)).toString(16));
-//   console.log(
-//     "Old Root hex: ",
-//     BigInt(tree.F.toString(res.oldRoot)).toString(16)
-//   );
+  console.log("Proof: ", proof);
+  console.log("Proof: ", parseProof(proof));
+  console.log(
+    "Public signals: ",
+    publicSignals.map((x) => BigInt(x).toString(16))
+  );
+  console.log("Root hex: ", BigInt(tree.F.toString(res.newRoot)).toString(16));
+  console.log(
+    "Old Root hex: ",
+    BigInt(tree.F.toString(res.oldRoot)).toString(16)
+  );
 }
 
 main();

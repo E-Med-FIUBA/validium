@@ -1,5 +1,5 @@
 import { newMemEmptyTrie } from "circomlibjs";
-import { poseidon6, poseidon7 } from "poseidon-lite";
+import { poseidon7 } from "poseidon-lite";
 import * as snarkjs from "snarkjs";
 
 interface Proof {
@@ -38,7 +38,6 @@ const hashPrescription = (prescription: {
 
 async function main() {
   const tree = await newMemEmptyTrie();
-  const _key = tree.F.e(1);
   const _value = {
     id: 1,
     doctorId: 1,
@@ -49,41 +48,9 @@ async function main() {
     isUsed: 0
   };
 
-  const key = tree.F.e(_key);
+  const key = 1;
   const value = hashPrescription(_value);
-
-  const res = await tree.insert(key, value);
-
-  let siblings = res.siblings;
-  for (let i = 0; i < siblings.length; i++)
-    siblings[i] = tree.F.toObject(siblings[i]);
-  while (siblings.length < 4) siblings.push(0);
-
-  await snarkjs.groth16.fullProve(
-    {
-      fnc: 0,
-      oldRoot: tree.F.toObject(res.oldRoot),
-      newRoot: tree.F.toObject(res.newRoot),
-      siblings: siblings,
-      oldKey: 0,
-      oldId: 0,
-      oldDoctorId: 0,
-      oldPresentationId: 0,
-      oldPatientId: 0,
-      oldQuantity: 0,
-      oldEmitedAt: 0,
-      newId: _value.id,
-      newDoctorId: _value.doctorId,
-      newPresentationId: _value.presentationId,
-      newPatientId: _value.patientId,
-      newQuantity: _value.quantity,
-      newEmitedAt: _value.emitedAt,
-      isOld0: 1,
-      newKey: tree.F.toObject(key)
-    },
-    "build/test/test_js/test.wasm",
-    "build/test/circuit_final.zkey"
-  );
+  await tree.insert(key, value);
 
   // --------------------------------
 
@@ -99,33 +66,108 @@ async function main() {
 
   const updatedValue = hashPrescription(_updatedValue);
 
-  const updatedRes = await tree.update(key, updatedValue);
-  siblings = updatedRes.siblings;
+  const res = await tree.update(key, updatedValue);
+  let siblings = res.siblings;
+  for (let i = 0; i < siblings.length; i++)
+    siblings[i] = tree.F.toObject(siblings[i]);
+  while (siblings.length < 4) siblings.push(0);
+
+  await snarkjs.groth16.fullProve(
+    {
+      oldRoot: tree.F.toObject(res.oldRoot),
+      newRoot: tree.F.toObject(res.newRoot),
+      siblings: siblings,
+      isOld0: res.isOld0 ? 1 : 0,
+      oldKey: tree.F.toObject(res.oldKey),
+      oldValue: tree.F.toObject(res.oldValue),
+      key: key,
+      id: _updatedValue.id,
+      doctorId: _updatedValue.doctorId,
+      presentationId: _updatedValue.presentationId,
+      patientId: _updatedValue.patientId,
+      quantity: _updatedValue.quantity,
+      emitedAt: _updatedValue.emitedAt
+    },
+    "build/test/test_js/test.wasm",
+    "build/test/circuit_final.zkey"
+  );
+
+  // --------------------------------
+
+  const newKey = 2;
+  const _newValue = {
+    id: 2,
+    doctorId: 1,
+    presentationId: 1,
+    patientId: 25,
+    quantity: 1,
+    emitedAt: 1,
+    isUsed: 0
+  };
+  const newValue = hashPrescription(_newValue);
+  const insertRes = await tree.insert(newKey, newValue);
+  siblings = insertRes.siblings;
+  for (let i = 0; i < siblings.length; i++)
+    siblings[i] = tree.F.toObject(siblings[i]);
+  while (siblings.length < 4) siblings.push(0);
+
+  const doctorTree = await newMemEmptyTrie();
+  const doctorKey = 438760;
+  const doctorValue = doctorTree.F.e(1000);
+
+  const doctorCreationRes = await doctorTree.insert(doctorKey, doctorValue);
+  let doctorSiblings = doctorCreationRes.siblings;
+  for (let i = 0; i < doctorSiblings.length; i++)
+    doctorSiblings[i] = doctorTree.F.toObject(doctorSiblings[i]);
+  while (doctorSiblings.length < 4) doctorSiblings.push(0);
+
+  await snarkjs.groth16.fullProve(
+    {
+      oldRoot: tree.F.toObject(insertRes.oldRoot),
+      newRoot: tree.F.toObject(insertRes.newRoot),
+      siblings: siblings,
+      oldKey: insertRes.isOld0 ? 0 : tree.F.toObject(insertRes.oldKey),
+      oldValue: insertRes.isOld0 ? 0 : tree.F.toObject(insertRes.oldValue),
+      isOld0: insertRes.isOld0 ? 1 : 0,
+      newKey: newKey,
+      newValue: newValue,
+      doctorRoot: doctorTree.F.toObject(doctorTree.root),
+      doctorSiblings: doctorSiblings,
+      doctorKey: doctorKey,
+      doctorValue: doctorTree.F.toObject(doctorValue),
+    },
+    "build/prescription_validation/prescription_validation_js/prescription_validation.wasm",
+    "build/prescription_validation/circuit_final.zkey"
+  );
+
+  // --------------------------------
+
+  const _newUpdatedValue = {
+    ..._newValue,
+    isUsed: 1
+  };
+  const newUpdatedValue = hashPrescription(_newUpdatedValue);
+  const newRes = await tree.update(newKey, newUpdatedValue);
+  siblings = newRes.siblings;
   for (let i = 0; i < siblings.length; i++)
     siblings[i] = tree.F.toObject(siblings[i]);
   while (siblings.length < 4) siblings.push(0);
 
   const { proof, publicSignals } = await snarkjs.groth16.fullProve(
     {
-      fnc: 1,
-      oldRoot: tree.F.toObject(updatedRes.oldRoot),
-      newRoot: tree.F.toObject(updatedRes.newRoot),
+      oldRoot: tree.F.toObject(newRes.oldRoot),
+      newRoot: tree.F.toObject(newRes.newRoot),
       siblings: siblings,
-      oldKey: tree.F.toObject(key),
-      oldId: _value.id,
-      oldDoctorId: _value.doctorId,
-      oldPresentationId: _value.presentationId,
-      oldPatientId: _value.patientId,
-      oldQuantity: _value.quantity,
-      oldEmitedAt: _value.emitedAt,
-      newId: _updatedValue.id,
-      newDoctorId: _updatedValue.doctorId,
-      newPresentationId: _updatedValue.presentationId,
-      newPatientId: _updatedValue.patientId,
-      newQuantity: _updatedValue.quantity,
-      newEmitedAt: _updatedValue.emitedAt,
-      isOld0: 0,
-      newKey: tree.F.toObject(key)
+      isOld0: newRes.isOld0 ? 1 : 0,
+      oldKey: tree.F.toObject(newRes.oldKey),
+      oldValue: tree.F.toObject(newRes.oldValue),
+      key: newKey,
+      id: _newUpdatedValue.id,
+      doctorId: _newUpdatedValue.doctorId,
+      presentationId: _newUpdatedValue.presentationId,
+      patientId: _newUpdatedValue.patientId,
+      quantity: _newUpdatedValue.quantity,
+      emitedAt: _newUpdatedValue.emitedAt
     },
     "build/test/test_js/test.wasm",
     "build/test/circuit_final.zkey"
