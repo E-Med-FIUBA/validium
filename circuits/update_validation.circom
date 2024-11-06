@@ -8,12 +8,10 @@ template UpdateVerifier(nLevels) {
     signal input newRoot;
     signal input siblings[nLevels];
 
-    signal input isOld0;
     signal input oldKey;
     signal input oldValue;
 
     signal input key;
-    signal input id;
     signal input doctorId;
     signal input presentationId;
     signal input patientId;
@@ -23,7 +21,7 @@ template UpdateVerifier(nLevels) {
     component unusedPoseidon = Poseidon(7);
     component usedPoseidon = Poseidon(7);
 
-    unusedPoseidon.inputs[0] <== id;
+    unusedPoseidon.inputs[0] <== key;
     unusedPoseidon.inputs[1] <== doctorId;
     unusedPoseidon.inputs[2] <== presentationId;
     unusedPoseidon.inputs[3] <== patientId;
@@ -31,7 +29,7 @@ template UpdateVerifier(nLevels) {
     unusedPoseidon.inputs[5] <== emitedAt;
     unusedPoseidon.inputs[6] <== 0;
 
-    usedPoseidon.inputs[0] <== id;
+    usedPoseidon.inputs[0] <== key;
     usedPoseidon.inputs[1] <== doctorId;
     usedPoseidon.inputs[2] <== presentationId;
     usedPoseidon.inputs[3] <== patientId;
@@ -61,7 +59,7 @@ template UpdateVerifier(nLevels) {
     processor.siblings <== siblings;
     processor.oldKey <== oldKey;
     processor.oldValue <== oldValue;
-    processor.isOld0 <== isOld0;
+    processor.isOld0 <== 0;
     processor.newKey <== key;
     processor.newValue <== usedPoseidon.out;
     processor.fnc <== [0, 1]; // Always update
