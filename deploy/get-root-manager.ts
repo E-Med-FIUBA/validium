@@ -15,7 +15,7 @@ if (!PRIVATE_KEY)
   throw "⛔️ Private key not detected! Add it to the .env file!";
 
 // Address of the contract on ZKsync testnet
-const CONTRACT_ADDRESS = "0x14283a87affD83EBa2B02856F7788fcbfE86395f";
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS || "";
 
 if (!CONTRACT_ADDRESS) throw "⛔️ Contract address not provided";
 

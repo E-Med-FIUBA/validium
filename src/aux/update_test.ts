@@ -88,8 +88,8 @@ async function main() {
       quantity: _updatedValue.quantity,
       emitedAt: _updatedValue.emitedAt
     },
-    "build/test/test_js/test.wasm",
-    "build/test/circuit_final.zkey"
+    "build/update_validation/update_validation_js/update_validation.wasm",
+    "build/update_validation/circuit_final.zkey"
   );
 
   console.log("Proof: ", proof);

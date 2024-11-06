@@ -3,7 +3,7 @@ pragma circom 2.0.0;
 include "./node_modules/circomlib/circuits/smt/smtprocessor.circom";
 include "./node_modules/circomlib/circuits/smt/smtverifier.circom";
 
-template Test(nLevels) {
+template UpdateVerifier(nLevels) {
     signal input oldRoot;
     signal input newRoot;
     signal input siblings[nLevels];
@@ -69,4 +69,4 @@ template Test(nLevels) {
     processor.newRoot === newRoot;
 }
 
-component main {public [oldRoot, newRoot]} = Test(4);
+component main {public [oldRoot, newRoot]} = UpdateVerifier(4);
