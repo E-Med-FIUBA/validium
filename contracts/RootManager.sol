@@ -125,4 +125,14 @@ contract RootManager {
     doctorsMerkleRoot = bytes32(0);
     prescriptionsMerkleRoot = bytes32(0);
   }
+
+  function resetDoctorsMerkleRoot() external {
+    require(msg.sender == admin, "Only admin can reset");
+    doctorsMerkleRoot = bytes32(0);
+  }
+
+  function resetPrescriptionsMerkleRoot() external {
+    require(msg.sender == admin, "Only admin can reset");
+    prescriptionsMerkleRoot = bytes32(0);
+  }
 }
