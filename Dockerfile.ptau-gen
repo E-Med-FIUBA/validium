@@ -18,4 +18,5 @@ COPY ./circuits /app
 
 
 CMD ["./generate_all_ptau.sh"]
+#CMD ["./generate_ptau.sh", "update_validation.circom"]
 # CMD ["/bin/bash"]

@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "./PrescriptionVerifier.sol";
 import "./DoctorVerifier.sol";
 import "./MerkleInclusionVerifier.sol";
+import "./UpdateVerifier.sol";
 
 contract RootManager {
   address public admin;
@@ -15,6 +16,7 @@ contract RootManager {
   PrescriptionVerifier prescriptionVerifier;
   DoctorVerifier doctorsVerifier;
   MerkleInclusionVerifier merkleInclusionVerifier;
+  UpdateVerifier updateVerifier;
 
   // Event emitted when any Merkle root is updated
   event DoctorsMerkleRootUpdated(bytes32 newRoot);
@@ -25,6 +27,7 @@ contract RootManager {
     prescriptionVerifier = new PrescriptionVerifier();
     doctorsVerifier = new DoctorVerifier();
     merkleInclusionVerifier = new MerkleInclusionVerifier();
+    updateVerifier = new UpdateVerifier();
     doctorsMerkleRoot = bytes32(0);
     prescriptionsMerkleRoot = bytes32(0);
   }
@@ -97,10 +100,39 @@ contract RootManager {
     return merkleInclusionVerifier.verifyProof(a, b, c, inputs);
   }
 
+  function verifyMarkAsUsed(
+    bytes32 newRoot,
+    uint256[2] calldata a,
+    uint256[2][2] calldata b,
+    uint256[2] calldata c
+  ) external {
+    uint256[2] memory inputs = [
+      uint256(prescriptionsMerkleRoot),
+      uint256(newRoot)
+    ];
+    
+    require(
+      updateVerifier.verifyProof(a, b, c, inputs),
+      "Invalid proof for mark as used"
+    );
+
+    prescriptionsMerkleRoot = newRoot;
+  }
+
   // Reset the Merkle trees
   function reset() external {
     require(msg.sender == admin, "Only admin can reset");
     doctorsMerkleRoot = bytes32(0);
+    prescriptionsMerkleRoot = bytes32(0);
+  }
+
+  function resetDoctorsMerkleRoot() external {
+    require(msg.sender == admin, "Only admin can reset");
+    doctorsMerkleRoot = bytes32(0);
+  }
+
+  function resetPrescriptionsMerkleRoot() external {
+    require(msg.sender == admin, "Only admin can reset");
     prescriptionsMerkleRoot = bytes32(0);
   }
 }
