@@ -39,4 +39,27 @@ describe("Merkle tree membership proof", () => {
     expect(publicSignals[1]).toEqual(key.toString());
     expect(publicSignals[2]).toEqual(tree.F.toString(hashedValue));
   });
+
+  it("should fail to create a proof when proving membership of a leaf that does not exist in a non-empty tree", async () => {
+    const key = 0;
+    const inexistentKey = 28;
+    const value = 42;
+    const hashedValue = poseidon([value]);
+
+    await tree.insert(key, hashedValue);
+    const res = await tree.find(key);
+
+    expect(
+      snarkjs.groth16.fullProve(
+        {
+          root: tree.F.toObject(tree.root),
+          siblings: convertSiblings(tree, res.siblings),
+          key: inexistentKey,
+          value: tree.F.toObject(hashedValue)
+        },
+        "build/merkle_inclusion_validation/merkle_inclusion_validation_js/merkle_inclusion_validation.wasm",
+        "build/merkle_inclusion_validation/circuit_final.zkey"
+      )
+    ).rejects.toThrow();
+  });
 });
