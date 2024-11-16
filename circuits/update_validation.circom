@@ -51,7 +51,8 @@ template UpdateVerifier(nLevels) {
     unusedVerifier.oldValue <== unusedPoseidon.out;
     unusedVerifier.fnc <== 0; // Always check for inclusion
 
-    // Verify that updating the prescription to be used results in the new root
+    // Verify that updating the prescription to be 
+    // used results in the new root
 
     component processor = SMTProcessor(nLevels);
 
@@ -67,4 +68,4 @@ template UpdateVerifier(nLevels) {
     processor.newRoot === newRoot;
 }
 
-component main {public [oldRoot, newRoot]} = UpdateVerifier(4);
+component main {public [oldRoot, newRoot]} = UpdateVerifier(24);

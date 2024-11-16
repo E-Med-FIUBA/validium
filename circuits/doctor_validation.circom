@@ -21,9 +21,9 @@ template DoctorValidation(nLevels) {
     processor.isOld0 <== isOld0;
     processor.newKey <== newKey;
     processor.newValue <== newValue;
-    processor.fnc <== [1, 0];  // Always update
+    processor.fnc <== [1, 0];  // Always insert
 
     processor.newRoot === newRoot;
 }
 
-component main {public [oldRoot, newRoot]} = DoctorValidation(4);
+component main {public [oldRoot, newRoot]} = DoctorValidation(24);

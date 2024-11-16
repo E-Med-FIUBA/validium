@@ -50,4 +50,4 @@ template PrescriptionVerifier(nLevels, doctorLevels) {
 }
 
 
-component main {public [oldRoot, newRoot, doctorRoot]} = PrescriptionVerifier(4, 4);
+component main {public [oldRoot, newRoot, doctorRoot]} = PrescriptionVerifier(24, 24);

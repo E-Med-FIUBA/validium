@@ -24,4 +24,4 @@ template MerkleInclusionVerifier(nLevels) {
 }
 
 
-component main {public [root, key, value]} = MerkleInclusionVerifier(4);
+component main {public [root, key, value]} = MerkleInclusionVerifier(24);
